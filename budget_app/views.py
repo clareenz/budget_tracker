@@ -51,10 +51,6 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-@login_required
-def dashboard(request):
-    return render(request, 'budget_app/dashboard.html')
-
 
 @login_required
 def dashboard(request):
@@ -67,14 +63,26 @@ def dashboard(request):
     total_expense = entries.filter(type='expense').aggregate(total=Sum('amount'))['total'] or 0
     balance = total_income - total_expense
 
-    categories = entries.filter(type='expense').values('category__name').annotate(total=Sum('amount'))
+    # Group expenses by category
+    category_expenses = {}
+    expense_entries = entries.filter(type='expense')
+    
+    for entry in expense_entries:
+        category_name = entry.get_category_display()  # Get human-readable category name
+        if category_name in category_expenses:
+            category_expenses[category_name] += entry.amount
+        else:
+            category_expenses[category_name] = entry.amount
+    
+    # Sort categories by expense amount (descending)
+    category_expenses = dict(sorted(category_expenses.items(), key=lambda item: item[1], reverse=True))
 
     context = {
         'total_income': total_income,
         'total_expense': total_expense,
         'balance': balance,
-        'categories': categories,
-        'entries': entries,
+        'category_expenses': category_expenses,
+        'entries': entries.order_by('-date')[:5],  # Most recent entries
     }
     return render(request, 'budget_app/dashboard.html', context)
 
