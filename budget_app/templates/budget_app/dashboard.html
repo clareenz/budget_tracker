@@ -1,0 +1,61 @@
+{% extends 'budget_app/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Your Financial Dashboard</h2>
+    
+    <div class="row">
+        <!-- Total Income -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Income</h5>
+                    <p class="card-text">${{ total_income|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Expense -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Expenses</h5>
+                    <p class="card-text">${{ total_expense|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Remaining Balance -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Remaining Balance</h5>
+                    <p class="card-text">${{ balance|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Expense Categories (Bar Chart Placeholder) -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h4>Expenses by Category</h4>
+            <ul>
+                {% for category in categories %}
+                <li>{{ category.category__name }}: ${{ category.total|floatformat:2 }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Add Entry and View History Links -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <a href="{% url 'add_entry' %}" class="btn btn-primary">Add Income/Expense</a>
+        </div>
+        <div class="col-md-6">
+            <a href="{% url 'history' %}" class="btn btn-secondary">View History</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

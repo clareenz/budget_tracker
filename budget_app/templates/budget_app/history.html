@@ -1,0 +1,31 @@
+{% extends 'budget_app/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>History</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+            <tr>
+                <td>{{ entry.title }}</td>
+                <td>${{ entry.amount|floatformat:2 }}</td>
+                <td>{{ entry.date }}</td>
+                <td>{{ entry.get_type_display }}</td>
+                <td>{{ entry.category }}</td>
+                <td>{{ entry.notes }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

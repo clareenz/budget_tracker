@@ -4,7 +4,9 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import RegisterForm, EntryForm
-
+from django.utils import timezone
+from django.db.models import Sum
+from .models import Entry
 
 def index(request):
     return render(request, 'index.html')
@@ -52,3 +54,32 @@ def logout_view(request):
 @login_required
 def dashboard(request):
     return render(request, 'budget_app/dashboard.html')
+
+
+@login_required
+def dashboard(request):
+    today = timezone.now().date()
+    month_start = today.replace(day=1)
+
+    entries = Entry.objects.filter(user=request.user, date__gte=month_start)
+
+    total_income = entries.filter(type='income').aggregate(total=Sum('amount'))['total'] or 0
+    total_expense = entries.filter(type='expense').aggregate(total=Sum('amount'))['total'] or 0
+    balance = total_income - total_expense
+
+    categories = entries.filter(type='expense').values('category__name').annotate(total=Sum('amount'))
+
+    context = {
+        'total_income': total_income,
+        'total_expense': total_expense,
+        'balance': balance,
+        'categories': categories,
+        'entries': entries,
+    }
+    return render(request, 'budget_app/dashboard.html', context)
+
+
+@login_required
+def history(request):
+    entries = Entry.objects.filter(user=request.user).order_by('-date')
+    return render(request, 'budget_app/history.html', {'entries': entries})
