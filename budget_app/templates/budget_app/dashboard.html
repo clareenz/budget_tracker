@@ -36,15 +36,26 @@
         </div>
     </div>
 
-    <!-- Expense Categories (Bar Chart Placeholder) -->
+    <!-- Expense Categories -->
     <div class="row mt-4">
         <div class="col-md-12">
-            <h4>Expenses by Category</h4>
-            <ul>
-                {% for category in categories %}
-                <li>{{ category.category__name }}: ${{ category.total|floatformat:2 }}</li>
-                {% endfor %}
-            </ul>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Expenses by Category</h4>
+                    {% if category_expenses %}
+                        <ul class="list-group">
+                            {% for category, total in category_expenses.items %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ category }}
+                                    <span class="badge bg-primary rounded-pill">${{ total|floatformat:2 }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No expense data available for this period.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 

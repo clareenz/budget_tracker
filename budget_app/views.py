@@ -7,6 +7,8 @@ from .forms import RegisterForm, EntryForm
 from django.utils import timezone
 from django.db.models import Sum
 from .models import Entry
+from django.shortcuts import render, redirect, get_object_or_404
+
 
 def index(request):
     return render(request, 'index.html')
@@ -91,3 +93,29 @@ def dashboard(request):
 def history(request):
     entries = Entry.objects.filter(user=request.user).order_by('-date')
     return render(request, 'budget_app/history.html', {'entries': entries})
+
+@login_required
+def update_entry(request, entry_id):
+    entry = get_object_or_404(Entry, id=entry_id, user=request.user)
+    
+    if request.method == 'POST':
+        form = EntryForm(request.POST, instance=entry)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Entry updated successfully.")
+            return redirect('history')
+    else:
+        form = EntryForm(instance=entry)
+    
+    return render(request, 'budget_app/update_entry.html', {'form': form, 'entry': entry})
+
+@login_required
+def delete_entry(request, entry_id):
+    entry = get_object_or_404(Entry, id=entry_id, user=request.user)
+    
+    if request.method == 'POST':
+        entry.delete()
+        messages.success(request, "Entry deleted successfully.")
+        return redirect('history')
+    
+    return render(request, 'budget_app/delete_entry.html', {'entry': entry})

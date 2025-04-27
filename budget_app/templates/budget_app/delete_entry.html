@@ -1,0 +1,16 @@
+{% extends 'budget_app/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Delete Entry</h2>
+    <div class="alert alert-danger">
+        <p>Are you sure you want to delete the following entry?</p>
+        <p><strong>{{ entry.title }}</strong> - ${{ entry.amount|floatformat:2 }} ({{ entry.get_type_display }}) on {{ entry.date }}</p>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'history' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
