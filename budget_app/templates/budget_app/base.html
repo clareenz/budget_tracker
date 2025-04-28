@@ -1,36 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Budget Tracker</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Budget Tracker</title>
+
+  {% load static %}
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Budget Tracker</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ml-auto">
-                <li><a href="{% url 'home' %}">Home</a></li>
-                {% if user.is_authenticated %}
-                    <li>Welcome, {{ request.user.username }}!</li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
-                {% endif %}
-            </ul>
-        </div>
+</head>
+<body class="flex flex-col min-h-screen bg-[#1b1b1b]">
+
+  <!-- Main Content Wrapper -->
+  <div class="flex flex-1">
+    <!-- Sidebar -->
+    <nav class="navbar w-64 shadow-md flex flex-col">
+      <div class="p-6">
+        <a href="/" class="text-2xl font-bold text-[#d8fffb] hover:text-[#00dac6]">Budget Tracker</a>
+      </div>
+
+      <ul class="flex-1 p-6 space-y-4">
+
+        {% if user.is_authenticated %}
+          <li class="text-center text-[#a4a4a4] font-semibold">Welcome, {{ request.user.username }}!</li>
+
+        <li>
+          <a href="{% url 'dashboard' %}" class="block px-4 py-2 rounded 
+          {% if request.resolver_match.url_name == 'dashboard' %}
+            bg-[#28282a] border border-[#343434] text-[#00dac6] font-semibold
+          {% else %}
+            text-[#d8fffb] font-semibold hover:text-[#00dac6]
+          {% endif %}">
+          <i class="fa-solid fa-table-columns mr-3"></i>
+          Dashboard</a>
+        </li>
+        
+          <li>
+            <a href="{% url 'logout' %}" class="block px-4 py-2 text-[#d8fffb] font-semibold hover:text-[#00dac6]">
+              <i class="fa-solid fa-right-from-bracket mr-3"></i>
+              Logout</a>
+          </li>
+        {% else %}
+          <li>
+            <a href="{% url 'login' %}" class="block px-4 py-2 rounded
+            {% if request.resolver_match.url_name == 'login'%}
+              bg-[#28282a] border border-[#343434] text-[#00dac6] font-semibold
+            {% else %}
+              text-[#d8fffb] font-semibold hover:text-[#00dac6]
+            {% endif %}">
+            <i class="fa-solid fa-right-to-bracket mr-3"></i>
+            Login</a>
+          </li>
+          <li>
+            <a href="{% url 'register' %}" class="block px-4 py-2 rounded
+            {% if request.resolver_match.url_name == 'register'%}
+              bg-[#28282a] border border-[#343434] text-[#00dac6] font-semibold
+            {% else %}
+              text-[#d8fffb] font-semibold hover:text-[#00dac6]
+            {% endif %}">
+            <i class="fa-solid fa-pen-to-square mr-3"></i>
+            Register</a>
+          </li>
+        {% endif %}
+      </ul>
     </nav>
-    
-    <div class="container my-4">
+
+    <!-- Page Content -->
+    <div class="flex-1 p-4 mt-10">
+      <div class="bg-[#0b0b0b] rounded-lg shadow-lg p-8 min-h-[calc(100vh-8rem)]">
         {% block content %}
         {% endblock %}
+      </div>
     </div>
+  </div>
 
-    <footer class="bg-light text-center py-4">
-        <p>&copy; 2025 Budget Tracker</p>
-    </footer>
+  <!-- Footer -->
+  <footer class="bg-[#1b1b1b] text-center py-4">
+    <p class="text-[#a4a4a4]">&copy; 2025 Budget Tracker</p>
+  </footer>
+
 </body>
 </html>
