@@ -11,6 +11,7 @@
         <a class="navbar-brand" href="/">Budget Tracker</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
+                <li><a href="{% url 'home' %}">Home</a></li>
                 {% if user.is_authenticated %}
                     <li>Welcome, {{ request.user.username }}!</li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>

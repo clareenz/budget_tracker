@@ -10,6 +10,9 @@ from .models import Entry
 from django.shortcuts import render, redirect, get_object_or_404
 
 
+def home(request):
+    return render(request, 'budget_app/home.html')
+
 def index(request):
     return render(request, 'index.html')
 
