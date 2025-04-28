@@ -12,6 +12,7 @@
                 <th>Type</th>
                 <th>Category</th>
                 <th>Notes</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -21,8 +22,12 @@
                 <td>${{ entry.amount|floatformat:2 }}</td>
                 <td>{{ entry.date }}</td>
                 <td>{{ entry.get_type_display }}</td>
-                <td>{{ entry.category }}</td>
+                <td>{{ entry.get_category_display }}</td>
                 <td>{{ entry.notes }}</td>
+                <td>
+                    <a href="{% url 'update_entry' entry.id %}" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="{% url 'delete_entry' entry.id %}" class="btn btn-sm btn-danger">Delete</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
