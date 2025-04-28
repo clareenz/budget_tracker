@@ -3,10 +3,55 @@
 {% block content %}
 <div class="container">
     <h2>Add Income/Expense</h2>
-    <form method="POST">
+    <form method="POST" class="mt-4">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Save Entry</button>
+        
+        <div class="form-group row mb-3">
+            <label for="{{ form.type.id_for_label }}" class="col-sm-2 col-form-label">Type:</label>
+            <div class="col-sm-10">
+                {{ form.type }}
+            </div>
+        </div>
+        
+        <div class="form-group row mb-3">
+            <label for="{{ form.title.id_for_label }}" class="col-sm-2 col-form-label">Title:</label>
+            <div class="col-sm-10">
+                {{ form.title }}
+            </div>
+        </div>
+        
+        <div class="form-group row mb-3">
+            <label for="{{ form.amount.id_for_label }}" class="col-sm-2 col-form-label">Amount:</label>
+            <div class="col-sm-10">
+                {{ form.amount }}
+            </div>
+        </div>
+        
+        <div class="form-group row mb-3">
+            <label for="{{ form.category.id_for_label }}" class="col-sm-2 col-form-label">Category:</label>
+            <div class="col-sm-10">
+                {{ form.category }}
+            </div>
+        </div>
+        
+        <div class="form-group row mb-3">
+            <label for="{{ form.date.id_for_label }}" class="col-sm-2 col-form-label">Date:</label>
+            <div class="col-sm-10">
+                {{ form.date }}
+            </div>
+        </div>
+        
+        <div class="form-group row mb-3">
+            <label for="{{ form.notes.id_for_label }}" class="col-sm-2 col-form-label">Notes:</label>
+            <div class="col-sm-10">
+                {{ form.notes }}
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">Save Entry</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary ms-2">Cancel</a>
+        </div>
     </form>
 </div>
 {% endblock %}

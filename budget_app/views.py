@@ -7,6 +7,8 @@ from .forms import RegisterForm, EntryForm
 from django.utils import timezone
 from django.db.models import Sum
 from .models import Entry
+from django.shortcuts import render, redirect, get_object_or_404
+
 
 def index(request):
     return render(request, 'index.html')
@@ -51,10 +53,6 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-@login_required
-def dashboard(request):
-    return render(request, 'budget_app/dashboard.html')
-
 
 @login_required
 def dashboard(request):
@@ -67,14 +65,36 @@ def dashboard(request):
     total_expense = entries.filter(type='expense').aggregate(total=Sum('amount'))['total'] or 0
     balance = total_income - total_expense
 
-    categories = entries.filter(type='expense').values('category__name').annotate(total=Sum('amount'))
+    # Group expenses by category
+    category_expenses = {}
+    expense_entries = entries.filter(type='expense')
+    
+    for entry in expense_entries:
+        category_name = entry.get_category_display()  # Get human-readable category name
+        if category_name in category_expenses:
+            category_expenses[category_name] += entry.amount
+        else:
+            category_expenses[category_name] = entry.amount
+    
+    # Sort categories by expense amount (descending)
+    category_expenses = dict(sorted(category_expenses.items(), key=lambda item: item[1], reverse=True))
+
+    # For Charts
+    categories = entries.filter(type='expense').values('category').annotate(total=Sum('amount'))
+
+    # Prepare data for chart
+    category_names = [category['category'] for category in categories]
+    category_totals = [float(category['total']) for category in categories]  # Convert to float here!
+
 
     context = {
         'total_income': total_income,
         'total_expense': total_expense,
         'balance': balance,
-        'categories': categories,
-        'entries': entries,
+        'category_expenses': category_expenses,
+        'entries': entries.order_by('-date')[:5],  # Most recent entries
+        'category_names': category_names,
+        'category_totals': category_totals,
     }
     return render(request, 'budget_app/dashboard.html', context)
 
@@ -83,3 +103,29 @@ def dashboard(request):
 def history(request):
     entries = Entry.objects.filter(user=request.user).order_by('-date')
     return render(request, 'budget_app/history.html', {'entries': entries})
+
+@login_required
+def update_entry(request, entry_id):
+    entry = get_object_or_404(Entry, id=entry_id, user=request.user)
+    
+    if request.method == 'POST':
+        form = EntryForm(request.POST, instance=entry)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Entry updated successfully.")
+            return redirect('history')
+    else:
+        form = EntryForm(instance=entry)
+    
+    return render(request, 'budget_app/update_entry.html', {'form': form, 'entry': entry})
+
+@login_required
+def delete_entry(request, entry_id):
+    entry = get_object_or_404(Entry, id=entry_id, user=request.user)
+    
+    if request.method == 'POST':
+        entry.delete()
+        messages.success(request, "Entry deleted successfully.")
+        return redirect('history')
+    
+    return render(request, 'budget_app/delete_entry.html', {'entry': entry})
