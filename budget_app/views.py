@@ -79,12 +79,22 @@ def dashboard(request):
     # Sort categories by expense amount (descending)
     category_expenses = dict(sorted(category_expenses.items(), key=lambda item: item[1], reverse=True))
 
+    # For Charts
+    categories = entries.filter(type='expense').values('category').annotate(total=Sum('amount'))
+
+    # Prepare data for chart
+    category_names = [category['category'] for category in categories]
+    category_totals = [float(category['total']) for category in categories]  # Convert to float here!
+
+
     context = {
         'total_income': total_income,
         'total_expense': total_expense,
         'balance': balance,
         'category_expenses': category_expenses,
         'entries': entries.order_by('-date')[:5],  # Most recent entries
+        'category_names': category_names,
+        'category_totals': category_totals,
     }
     return render(request, 'budget_app/dashboard.html', context)
 
