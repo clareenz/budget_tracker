@@ -1,16 +1,25 @@
 {% extends 'budget_app/base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Delete Entry</h2>
-    <div class="alert alert-danger">
-        <p>Are you sure you want to delete the following entry?</p>
-        <p><strong>{{ entry.title }}</strong> - ${{ entry.amount|floatformat:2 }} ({{ entry.get_type_display }}) on {{ entry.date }}</p>
+<div class="max-w-2xl mx-auto mt-10 p-8 bg-white shadow-md rounded-lg">
+    <h2 class="text-2xl font-bold text-center text-red-600 mb-6">Delete Entry</h2>
+
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-5 rounded mb-6">
+        <p class="mb-2 text-center">Are you sure you want to delete the following entry?</p>
+        <p class="text-center font-semibold">
+            {{ entry.title }} - ${{ entry.amount|floatformat:2 }} 
+            ({{ entry.get_type_display }}) on {{ entry.date }}
+        </p>
     </div>
-    <form method="POST">
+
+    <form method="POST" class="flex justify-center gap-4">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Delete</button>
-        <a href="{% url 'history' %}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded">
+            Delete
+        </button>
+        <a href="{% url 'history' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded">
+            Cancel
+        </a>
     </form>
 </div>
 {% endblock %}

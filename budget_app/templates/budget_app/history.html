@@ -1,36 +1,43 @@
 {% extends 'budget_app/base.html' %}
 
 {% block content %}
-<div class="container">
-    <h2>History</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Amount</th>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Category</th>
-                <th>Notes</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for entry in entries %}
-            <tr>
-                <td>{{ entry.title }}</td>
-                <td>${{ entry.amount|floatformat:2 }}</td>
-                <td>{{ entry.date }}</td>
-                <td>{{ entry.get_type_display }}</td>
-                <td>{{ entry.get_category_display }}</td>
-                <td>{{ entry.notes }}</td>
-                <td>
-                    <a href="{% url 'update_entry' entry.id %}" class="btn btn-sm btn-primary">Edit</a>
-                    <a href="{% url 'delete_entry' entry.id %}" class="btn btn-sm btn-danger">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="max-w-6xl mx-auto p-6 mt-10">
+    <h2 class="text-3xl font-bold mb-6 text-center">History</h2>
+
+    <div class="overflow-x-auto rounded-lg shadow">
+        <table class="min-w-full bg-white">
+            <thead class="bg-gray-100 text-gray-700 uppercase text-sm">
+                <tr>
+                    <th class="py-3 px-6 text-left">Title</th>
+                    <th class="py-3 px-6 text-left">Amount</th>
+                    <th class="py-3 px-6 text-left">Date</th>
+                    <th class="py-3 px-6 text-left">Type</th>
+                    <th class="py-3 px-6 text-left">Category</th>
+                    <th class="py-3 px-6 text-left">Notes</th>
+                    <th class="py-3 px-6 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700">
+                {% for entry in entries %}
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-4 px-6">{{ entry.title }}</td>
+                    <td class="py-4 px-6">${{ entry.amount|floatformat:2 }}</td>
+                    <td class="py-4 px-6">{{ entry.date }}</td>
+                    <td class="py-4 px-6">{{ entry.get_type_display }}</td>
+                    <td class="py-4 px-6">{{ entry.get_category_display }}</td>
+                    <td class="py-4 px-6">{{ entry.notes }}</td>
+                    <td class="py-4 px-6 flex justify-center gap-2">
+                        <a href="{% url 'update_entry' entry.id %}" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold py-2 px-4 rounded">
+                            Edit
+                        </a>
+                        <a href="{% url 'delete_entry' entry.id %}" class="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold py-2 px-4 rounded">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

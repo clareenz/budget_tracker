@@ -1,15 +1,23 @@
 {% extends 'budget_app/base.html' %}
 
 {% block content %}
-<div class="container text-center mt-5">
-    <h1>Welcome to Personal Budget Tracker</h1>
-    <p>Manage your income and expenses easily.</p>
+<div class="flex flex-col items-center justify-center min-h-[70vh] text-center px-4">
+    <h1 class="text-4xl font-bold mb-4">Welcome to Personal Budget Tracker</h1>
+    <p class="text-lg text-gray-600 mb-6">Manage your income and expenses easily.</p>
 
     {% if not request.user.is_authenticated %}
-        <a href="{% url 'login' %}" class="btn btn-primary mt-3">Login</a>
-        <a href="{% url 'register' %}" class="btn btn-success mt-3">Register</a>
+        <div class="flex gap-4">
+            <a href="{% url 'login' %}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded shadow">
+                Login
+            </a>
+            <a href="{% url 'register' %}" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded shadow">
+                Register
+            </a>
+        </div>
     {% else %}
-        <a href="{% url 'dashboard' %}" class="btn btn-primary mt-3">Go to Dashboard</a>
+        <a href="{% url 'dashboard' %}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded shadow">
+            Go to Dashboard
+        </a>
     {% endif %}
 </div>
 {% endblock %}
