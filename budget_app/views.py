@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.db.models import Sum
 from .models import Entry
 from django.shortcuts import render, redirect, get_object_or_404
-
+from calendar import month_name
 
 def home(request):
     return render(request, 'budget_app/home.html')
@@ -59,15 +59,40 @@ def logout_view(request):
 
 @login_required
 def dashboard(request):
+    # Get filter parameters
+    selected_month = request.GET.get('month', '')
+    selected_year = request.GET.get('year', '')
+    selected_category = request.GET.get('category', '')
+    
+    # Initialize filter flag
+    is_filtered = bool(selected_month or selected_year or selected_category)
+    
+    # Default to current month if no filters applied
     today = timezone.now().date()
-    month_start = today.replace(day=1)
-
-    entries = Entry.objects.filter(user=request.user, date__gte=month_start)
-
+    
+    if not is_filtered:
+        # Default to current month's data (your original behavior)
+        month_start = today.replace(day=1)
+        entries = Entry.objects.filter(user=request.user, date__gte=month_start)
+    else:
+        # Start with all user entries
+        entries = Entry.objects.filter(user=request.user)
+        
+        # Apply filters if provided
+        if selected_month:
+            entries = entries.filter(date__month=selected_month)
+        
+        if selected_year:
+            entries = entries.filter(date__year=selected_year)
+        
+        if selected_category:
+            entries = entries.filter(category=selected_category)
+    
+    # Calculate totals
     total_income = entries.filter(type='income').aggregate(total=Sum('amount'))['total'] or 0
     total_expense = entries.filter(type='expense').aggregate(total=Sum('amount'))['total'] or 0
     balance = total_income - total_expense
-
+    
     # Group expenses by category
     category_expenses = {}
     expense_entries = entries.filter(type='expense')
@@ -81,15 +106,25 @@ def dashboard(request):
     
     # Sort categories by expense amount (descending)
     category_expenses = dict(sorted(category_expenses.items(), key=lambda item: item[1], reverse=True))
-
-    # For Charts
-    categories = entries.filter(type='expense').values('category').annotate(total=Sum('amount'))
-
-    # Prepare data for chart
-    category_names = [category['category'] for category in categories]
-    category_totals = [float(category['total']) for category in categories]  # Convert to float here!
-
-
+    
+    # Prepare data for pie chart
+    category_names = list(category_expenses.keys())
+    category_totals = [float(value) for value in category_expenses.values()]  # Convert to float
+    
+    # Get available years for the filter dropdown without using ExtractYear
+    distinct_years = set()
+    for entry in Entry.objects.filter(user=request.user):
+        distinct_years.add(entry.date.year)
+    available_years = sorted(list(distinct_years), reverse=True)
+    available_years = [str(year) for year in available_years]
+    
+    # Get all categories for the filter dropdown
+    all_categories = list(set([entry.get_category_display() for entry in Entry.objects.filter(user=request.user)]))
+    all_categories.sort()
+    
+    # Get month name for display in the active filters
+    selected_month_name = month_name[int(selected_month)] if selected_month and selected_month.isdigit() and 1 <= int(selected_month) <= 12 else ""
+    
     context = {
         'total_income': total_income,
         'total_expense': total_expense,
@@ -98,7 +133,15 @@ def dashboard(request):
         'entries': entries.order_by('-date')[:5],  # Most recent entries
         'category_names': category_names,
         'category_totals': category_totals,
+        'available_years': available_years,
+        'all_categories': all_categories,
+        'selected_month': selected_month,
+        'selected_year': selected_year,
+        'selected_category': selected_category,
+        'selected_month_name': selected_month_name,
+        'is_filtered': is_filtered,
     }
+    
     return render(request, 'budget_app/dashboard.html', context)
 
 
