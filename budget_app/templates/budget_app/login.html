@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="login-container max-w-md mx-auto mt-16 bg-[#28282a] shadow-lg rounded-lg p-8">
-  <h2 class="text-3xl font-bold mb-8 text-center text-[#ffffff]">Login</h2>
+  <h2 class="text-3xl font-bold mb-8 text-center text-[#d8fffb]">Login</h2>
   
   <form method="post" class="space-y-6">
     {% csrf_token %}
@@ -17,8 +17,8 @@
       </div>
     {% endfor %}
     
-    <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg transition duration-300">
-      Login
+    <button type="submit" class="w-full bg-[#00dac6] hover:bg-[#00c7ab] hover:text-white text-black font-semibold py-2 rounded-lg transition duration-300">
+      Log In
     </button>
   </form>
 </div>

@@ -178,3 +178,27 @@
   outline: none;
   background-color: #3c3c3c;
 }
+
+.register-container input[type="text"],
+.register-container input[type="password"],
+.register-container input[type="email"],
+.register-container select,
+.register-container textarea {
+  width: 100%;
+  padding: 0.75rem; /* 12px */
+  border-radius: 0.5rem; /* 8px */
+  border: 1px solid #343434;
+  background-color: #3c3c3c;
+  color: #b1b1b1;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Focus style */
+.register-container input:focus,
+.register-container select:focus,
+.register-container textarea:focus {
+  border-color: #00dac6;
+  outline: none;
+  background-color: #3c3c3c;
+}
