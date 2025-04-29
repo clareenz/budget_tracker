@@ -9,6 +9,8 @@ from django.db.models import Sum
 from .models import Entry
 from django.shortcuts import render, redirect, get_object_or_404
 from calendar import month_name
+import csv
+from django.http import HttpResponse
 
 def home(request):
     return render(request, 'budget_app/home.html')
@@ -175,3 +177,31 @@ def delete_entry(request, entry_id):
         return redirect('history')
     
     return render(request, 'budget_app/delete_entry.html', {'entry': entry})
+
+@login_required
+def export_csv(request):
+    # Create the HttpResponse object with CSV header
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="budget_history.csv"'
+    
+    # Get all entries for the current user
+    entries = Entry.objects.filter(user=request.user).order_by('-date')
+    
+    # Create the CSV writer
+    writer = csv.writer(response)
+    
+    # Write the header row
+    writer.writerow(['Title', 'Amount', 'Date', 'Type', 'Category', 'Notes'])
+    
+    # Write the data rows
+    for entry in entries:
+        writer.writerow([
+            entry.title,
+            entry.amount,
+            entry.date,
+            entry.get_type_display(),
+            entry.get_category_display(),
+            entry.notes
+        ])
+    
+    return response

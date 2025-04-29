@@ -3,6 +3,12 @@
 {% block content %}
 <div class="max-w-6xl mx-auto p-6 mt-10">
     <h2 class="text-3xl font-bold mb-6 text-center">History</h2>
+    
+    <div class="flex justify-end mb-4">
+        <a href="{% url 'export_csv' %}" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded">
+            Export to CSV
+        </a>
+    </div>
 
     <div class="overflow-x-auto rounded-lg shadow">
         <table class="min-w-full bg-white">

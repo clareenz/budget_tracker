@@ -11,4 +11,5 @@ urlpatterns = [
     path('history/', views.history, name='history'),
     path('entries/<int:entry_id>/update/', views.update_entry, name='update_entry'),
     path('entries/<int:entry_id>/delete/', views.delete_entry, name='delete_entry'),
+    path('export-csv/', views.export_csv, name='export_csv'),
 ]
