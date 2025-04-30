@@ -2,33 +2,34 @@
 {% load static %}
 
 {% block content %}
-<div class="flex flex-col items-center justify-center min-h-[70vh] text-center px-4 bg-[#0b0b0b] bg-cover bg-center relative"
-     style="background-image: url('{% static 'images/money.jpg' %}')">
+<div class="flex flex-col items-center justify-center min-h-[70vh] text-center m-0 p-0">
 
     <h1 class="text-4xl font-bold mb-4 text-[#d8fffb]">Welcome to Personal Budget Tracker</h1>
     <p class="text-lg text-[#b1b1b1] mb-6">Manage your income and expenses easily.</p>
-
+  
     {% if not request.user.is_authenticated %}
-        <div class="flex flex-col items-center gap-4 text-center">
-            <p class="text-[#d8fffb] text-lg">
-                Register to manage your wealth properly.
-                <a href="{% url 'register' %}" class="text-[#00dac6] hover:underline font-semibold">
-                    Register here.
-                </a>
-            </p>
-
-            <p class="text-[#a4a4a4] text-sm absolute bottom-8">
-                Already have an account? 
-                <a href="{% url 'login' %}" class="text-[#00dac6] hover:underline font-semibold">
-                    Sign In
-                </a> 
-                to view your wealth.
-            </p>
-        </div>
+      <div class="flex flex-col items-center gap-4 text-center mt-10 p-4">
+        <p class="text-[#d8fffb] text-lg">
+          Register to manage your wealth properly.
+          <a href="{% url 'register' %}" class="text-[#00dac6] hover:underline font-semibold">
+            Register here.
+          </a>
+        </p>
+  
+        <p class="text-[#a4a4a4] text-sm mt-10 absolute bottom-10">
+          Already have an account?
+          <a href="{% url 'login' %}" class="text-[#00dac6] hover:underline font-semibold">
+            Sign In
+          </a>
+          to view your wealth.
+        </p>
+      </div>
     {% else %}
-        <a href="{% url 'dashboard' %}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded shadow">
-            Go to Dashboard
-        </a>
+      <a href="{% url 'dashboard' %}" class="text-[#00dac6] hover:underline font-semibold">
+        Go to Dashboard
+      </a>
     {% endif %}
-</div>
+  </div>
+  
+  
 {% endblock %}

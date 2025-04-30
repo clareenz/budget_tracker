@@ -3,10 +3,6 @@
   max-width: 112rem; 
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
 }
 
 .heading-2xl {
@@ -46,19 +42,10 @@
   transition: color 0.3s ease, background-color 0.3s ease;
 }
 
-/* Optional: Style for the brand link (Budget Tracker) when hovered */
-.navbar a:hover {
-  background-color: transparent; /* Fix for "hover:bg-" typo */
-}
-
-/* When a link is active (already handled by Django + Tailwind classes) */
-
-/* Extra: if you want a smoother hover effect even on text */
 .navbar li a:hover {
   text-decoration: none;
 }
 
-/* Fix the hover:bg- mistake in your brand link */
 .navbar .brand:hover {
   background-color: #28282a;
 }
@@ -69,8 +56,8 @@
   background-color: #1b1b1b;
   border: 1px solid #353535;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 0.5rem; /* rounded-lg */
-  padding: 1.5rem; /* p-6 */
+  border-radius: 0.5rem;
+  padding: 1.5rem;
 }
 
 /* === Expense List === */
@@ -202,3 +189,20 @@
   outline: none;
   background-color: #3c3c3c;
 }
+
+.main-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+
+}
+
+.main-container {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+

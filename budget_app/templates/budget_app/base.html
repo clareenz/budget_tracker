@@ -70,11 +70,18 @@
 
     <!-- Page Content -->
     <div class="flex-1 p-4 mt-10">
-      <div class="bg-[#0b0b0b] rounded-lg shadow-lg p-8 min-h-[calc(100vh-8rem)]">
-        {% block content %}
-        {% endblock %}
+      <div class="main-container rounded-lg shadow-lg p-8 min-h-[calc(100vh-8rem)] bg-cover bg-center bg-no-repeat"
+           style="background-image: url('{% static 'images/peso.png' %}');">
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 to-transparent"></div>
+        <!-- Backdrop Blur -->
+        <div class="absolute inset-0 backdrop-blur-sm bg-black/40"></div>
+        <div class="relative z-10">
+          {% block content %}
+          {% endblock %}
+        </div>
       </div>
-    </div>
+    </div>    
   </div>
 
   <!-- Footer -->
