@@ -2,17 +2,17 @@
 
 {% block content %}
 <div class="max-w-6xl mx-auto p-6 mt-10">
-    <h2 class="text-3xl font-bold mb-6 text-center">History</h2>
+    <h2 class="text-3xl font-bold mb-6 text-center text-[#d8fffb]">History</h2>
     
     <div class="flex justify-end mb-4">
-        <a href="{% url 'export_csv' %}" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded">
+        <a href="{% url 'export_csv' %}" class="bg-[#00dac6] hover:bg-[#00c7ab] hover:text-white text-black font-semibold py-2 px-4 rounded">
             Export to CSV
         </a>
     </div>
 
     <div class="overflow-x-auto rounded-lg shadow">
-        <table class="min-w-full bg-white">
-            <thead class="bg-gray-100 text-gray-700 uppercase text-sm">
+        <table class="min-w-full bg-[#28282a]">
+            <thead class="bg-[#1b1b1b] text-[#9d9d9d] uppercase text-sm">
                 <tr>
                     <th class="py-3 px-6 text-left">Title</th>
                     <th class="py-3 px-6 text-left">Amount</th>
@@ -23,23 +23,23 @@
                     <th class="py-3 px-6 text-center">Actions</th>
                 </tr>
             </thead>
-            <tbody class="text-gray-700">
+            <tbody class="text-white">
                 {% for entry in entries %}
-                <tr class="border-b hover:bg-gray-50">
+                <tr class="border-b border-[#383838] hover:bg-[#666666]">
                     <td class="py-4 px-6">{{ entry.title }}</td>
-                    <td class="py-4 px-6">${{ entry.amount|floatformat:2 }}</td>
+                    <td class="py-4 px-6">Php {{ entry.amount|floatformat:2 }}</td>
                     <td class="py-4 px-6">{{ entry.date }}</td>
                     <td class="py-4 px-6">{{ entry.get_type_display }}</td>
                     <td class="py-4 px-6">{{ entry.get_category_display }}</td>
                     <td class="py-4 px-6">{{ entry.notes }}</td>
-                    <td class="py-4 px-6 flex justify-center gap-2">
-                        <a href="{% url 'update_entry' entry.id %}" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold py-2 px-4 rounded">
-                            Edit
+                    <td class="py-4 px-6 flex justify-center gap-4">
+                        <a href="{% url 'update_entry' entry.id %}" class="text-[#590be2] hover:text-[#c09bf9] text-sm" title="Edit">
+                            <i class="fas fa-pen"></i>
                         </a>
-                        <a href="{% url 'delete_entry' entry.id %}" class="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold py-2 px-4 rounded">
-                            Delete
+                        <a href="{% url 'delete_entry' entry.id %}" class="text-[#da0016] hover:text-[#682c2b] text-sm" title="Delete">
+                            <i class="fas fa-trash"></i>
                         </a>
-                    </td>
+                    </td>                    
                 </tr>
                 {% endfor %}
             </tbody>

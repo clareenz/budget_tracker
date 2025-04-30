@@ -206,3 +206,112 @@
   background-repeat: no-repeat;
 }
 
+/* Styling for all input fields in the add entry container */
+.add-entry-container input,
+.add-entry-container select,
+.add-entry-container textarea {
+  width: 100%;
+  padding: 0.75rem; /* 12px */
+  border-radius: 1rem; /* 16px for more rounded corners */
+  border: 1px solid #343434;
+  background-color: #3c3c3c;
+  color: #b1b1b1;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Focus effect for input, select, and textarea fields */
+.add-entry-container input:focus,
+.add-entry-container select:focus,
+.add-entry-container textarea:focus {
+  border-color: #00dac6;
+  outline: none;
+  background-color: #3c3c3c;
+}
+
+/* Specific focus style for Amount and Date fields */
+.add-entry-container input[name="amount"]:focus,
+.add-entry-container input[name="date"]:focus {
+  border-color: #00dac6;
+  outline: none;
+  background-color: #3c3c3c;
+}
+
+.add-entry-container input[type="text"],
+.add-entry-container input[type="number"],
+.add-entry-container input[type="date"],
+.add-entry-container select,
+.add-entry-container textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #343434;
+  background-color: #3c3c3c;
+  color: #b1b1b1;
+  font-size: 0.875rem;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.add-entry-container input:focus,
+.add-entry-container select:focus,
+.add-entry-container textarea:focus {
+  border-color: #00dac6;
+  outline: none;
+  background-color: #3c3c3c;
+}
+
+
+/* Update Entry*/
+.update-entry-container input,
+.update-entry-container select,
+.update-entry-container textarea {
+  width: 100%;
+  padding: 0.75rem; /* 12px */
+  border-radius: 1rem; /* 16px for more rounded corners */
+  border: 1px solid #343434;
+  background-color: #3c3c3c;
+  color: #b1b1b1;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Focus effect for input, select, and textarea fields */
+.update-entry-container input:focus,
+.update-entry-container select:focus,
+.update-entry-container textarea:focus {
+  border-color: #00dac6;
+  outline: none;
+  background-color: #3c3c3c;
+}
+
+/* Specific focus style for Amount and Date fields */
+.update-entry-container input[name="amount"]:focus,
+.update-entry-container input[name="date"]:focus {
+  border-color: #00dac6;
+  outline: none;
+  background-color: #3c3c3c;
+}
+
+/* Redundant rule (optional to consolidate styles) */
+.update-entry-container input[type="text"],
+.update-entry-container input[type="number"],
+.update-entry-container input[type="date"],
+.update-entry-container select,
+.update-entry-container textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #343434;
+  background-color: #3c3c3c;
+  color: #b1b1b1;
+  font-size: 0.875rem;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.update-entry-container input:focus,
+.update-entry-container select:focus,
+.update-entry-container textarea:focus {
+  border-color: #00dac6;
+  outline: none;
+  background-color: #3c3c3c;
+}

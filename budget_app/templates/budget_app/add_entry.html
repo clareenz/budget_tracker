@@ -1,54 +1,54 @@
 {% extends 'budget_app/base.html' %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto mt-10 bg-white shadow-md rounded-lg p-8">
-    <h2 class="text-2xl font-bold mb-6 text-center">Add Income/Expense</h2>
+<div class="max-w-2xl mx-auto mt-10 bg-[#1b1b1b] shadow-md rounded-lg p-8 add-entry-container">
+    <h2 class="text-2xl font-bold mb-6 text-center text-white">Add Income/Expense</h2>
     
     <form method="POST" class="space-y-6">
         {% csrf_token %}
         
         <!-- Type -->
         <div>
-            <label for="{{ form.type.id_for_label }}" class="block text-gray-700 mb-2 font-semibold">Type:</label>
+            <label for="{{ form.type.id_for_label }}" class="block text-[#a4a4a4] mb-2 font-semibold">Type:</label>
             {{ form.type }}
         </div>
         
         <!-- Title -->
         <div>
-            <label for="{{ form.title.id_for_label }}" class="block text-gray-700 mb-2 font-semibold">Title:</label>
+            <label for="{{ form.title.id_for_label }}" class="block text-[#a4a4a4] mb-2 font-semibold">Title:</label>
             {{ form.title }}
         </div>
         
         <!-- Amount -->
         <div>
-            <label for="{{ form.amount.id_for_label }}" class="block text-gray-700 mb-2 font-semibold">Amount:</label>
+            <label for="{{ form.amount.id_for_label }}" class="block text-[#a4a4a4] mb-2 font-semibold">Amount:</label>
             {{ form.amount }}
         </div>
         
         <!-- Category -->
         <div>
-            <label for="{{ form.category.id_for_label }}" class="block text-gray-700 mb-2 font-semibold">Category:</label>
+            <label for="{{ form.category.id_for_label }}" class="block text-[#a4a4a4] mb-2 font-semibold">Category:</label>
             {{ form.category }}
         </div>
         
         <!-- Date -->
         <div>
-            <label for="{{ form.date.id_for_label }}" class="block text-gray-700 mb-2 font-semibold">Date:</label>
+            <label for="{{ form.date.id_for_label }}" class="block text-[#a4a4a4] mb-2 font-semibold">Date:</label>
             {{ form.date }}
         </div>
         
         <!-- Notes -->
         <div>
-            <label for="{{ form.notes.id_for_label }}" class="block text-gray-700 mb-2 font-semibold">Notes:</label>
+            <label for="{{ form.notes.id_for_label }}" class="block text-[#a4a4a4] mb-2 font-semibold">Notes:</label>
             {{ form.notes }}
         </div>
         
         <!-- Buttons -->
         <div class="flex justify-center gap-4 mt-6">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded">
+            <button type="submit" class="bg-[#00dac6] hover:bg-[#00c7ab] hover:text-white text-black font-semibold py-2 px-6 rounded transition duration-300">
                 Save Entry
             </button>
-            <a href="{% url 'dashboard' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded">
+            <a href="{% url 'dashboard' %}" class="bg-[#28282a] hover:bg-transparent text-[#00dac6] font-semibold py-2 px-6 rounded">
                 Cancel
             </a>
         </div>
