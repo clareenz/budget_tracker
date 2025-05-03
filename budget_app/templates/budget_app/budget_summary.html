@@ -1,0 +1,28 @@
+{% extends 'budget_app/base.html' %}
+{% block content %}
+<div class="max-w-3xl mx-auto mt-10 bg-[#1b1b1b] p-6 rounded-lg shadow text-white text-sm sm:text-base">
+  <h2 class="text-xl font-bold text-center mb-4">Budget Summary for {{ month }}/{{ year }}</h2>
+  <table class="w-full text-left border-collapse">
+    <thead>
+      <tr class="border-b border-gray-600 text-[#a4a4a4]">
+        <th class="py-2">Category</th>
+        <th class="py-2">Budgeted</th>
+        <th class="py-2">Spent</th>
+        <th class="py-2">Remaining</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in summary %}
+        <tr class="border-b border-gray-700 {% if item.over_budget %}text-red-500{% endif %}">
+          <td class="py-2">{{ item.category }}</td>
+          <td class="py-2">Php {{ item.budgeted|floatformat:2 }}</td>
+          <td class="py-2">Php {{ item.spent|floatformat:2 }}</td>
+          <td class="py-2">Php {{ item.remaining|floatformat:2 }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="text-center py-4 text-gray-400">No budget data available.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,57 +1,59 @@
 {% extends 'budget_app/base.html' %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto mt-10 bg-white shadow-md rounded-lg p-8">
-    <h2 class="text-2xl font-bold mb-6 text-center">Add Income/Expense</h2>
-    
-    <form method="POST" class="space-y-6">
-        {% csrf_token %}
-        
-        <!-- Type -->
-        <div>
-            <label for="{{ form.type.id_for_label }}" class="block text-gray-700 mb-2 font-semibold">Type:</label>
-            {{ form.type }}
-        </div>
-        
-        <!-- Title -->
-        <div>
-            <label for="{{ form.title.id_for_label }}" class="block text-gray-700 mb-2 font-semibold">Title:</label>
-            {{ form.title }}
-        </div>
-        
-        <!-- Amount -->
-        <div>
-            <label for="{{ form.amount.id_for_label }}" class="block text-gray-700 mb-2 font-semibold">Amount:</label>
-            {{ form.amount }}
-        </div>
-        
-        <!-- Category -->
-        <div>
-            <label for="{{ form.category.id_for_label }}" class="block text-gray-700 mb-2 font-semibold">Category:</label>
-            {{ form.category }}
-        </div>
-        
-        <!-- Date -->
-        <div>
-            <label for="{{ form.date.id_for_label }}" class="block text-gray-700 mb-2 font-semibold">Date:</label>
-            {{ form.date }}
-        </div>
-        
-        <!-- Notes -->
-        <div>
-            <label for="{{ form.notes.id_for_label }}" class="block text-gray-700 mb-2 font-semibold">Notes:</label>
-            {{ form.notes }}
-        </div>
-        
-        <!-- Buttons -->
-        <div class="flex justify-center gap-4 mt-6">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded">
-                Save Entry
-            </button>
-            <a href="{% url 'dashboard' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded">
-                Cancel
-            </a>
-        </div>
-    </form>
+<div class="max-w-sm sm:max-w-lg md:max-w-2xl mx-auto mt-6 sm:mt-10 bg-[#1b1b1b] shadow-md rounded-md p-4 sm:p-6 md:p-8 text-xs sm:text-sm md:text-base">
+  <h2 class="text-lg sm:text-lg md:text-xl font-bold mb-4 sm:mb-6 text-center text-white">Add Income/Expense</h2>
+
+  <form method="POST" class="space-y-4 sm:space-y-5 md:space-y-6">
+    {% csrf_token %}
+
+    <!-- Type -->
+    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+      <label for="{{ form.type.id_for_label }}" class="sm:w-1/4 text-base text-[#a4a4a4] font-semibold">Type:</label>
+      <div class="sm:w-3/4">{{ form.type }}</div>
+    </div>
+
+    <!-- Title -->
+    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+      <label for="{{ form.title.id_for_label }}" class="sm:w-1/4 text-base text-[#a4a4a4] font-semibold">Title:</label>
+      <div class="sm:w-3/4">{{ form.title }}</div>
+    </div>
+
+    <!-- Amount -->
+    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+      <label for="{{ form.amount.id_for_label }}" class="sm:w-1/4 text-base text-[#a4a4a4] font-semibold">Amount:</label>
+      <div class="sm:w-3/4">{{ form.amount }}</div>
+    </div>
+
+    <!-- Category -->
+    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+      <label for="{{ form.category.id_for_label }}" class="sm:w-1/4 text-base text-[#a4a4a4] font-semibold">Category:</label>
+      <div class="sm:w-3/4">{{ form.category }}</div>
+    </div>
+
+    <!-- Date -->
+    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+      <label for="{{ form.date.id_for_label }}" class="sm:w-1/4 text-base text-[#a4a4a4] font-semibold">Date:</label>
+      <div class="sm:w-3/4">{{ form.date }}</div>
+    </div>
+
+    <!-- Notes -->
+    <div>
+      <label for="{{ form.notes.id_for_label }}" class="block text-base text-[#a4a4a4] mb-1 sm:mb-2 font-semibold">Notes:</label>
+      <div class="w-full">{{ form.notes }}</div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex flex-row justify-center gap-2 sm:gap-3 mt-3 sm:mt-5 text-[10px] sm:text-xs">
+      <button type="submit"
+        class="w-1/2 sm:w-auto text-center text-sm sm:text-xs md:text-base bg-[#00dac6] hover:bg-[#00c7ab] hover:text-white text-black font-semibold py-1 px-3 sm:px-4 rounded transition duration-300">
+        Save
+      </button>
+      <a href="{% url 'dashboard' %}"
+        class="w-1/2 sm:w-auto text-center text-sm sm:text-xs md:text-base bg-[#28282a] hover:bg-transparent text-[#00dac6] font-semibold py-1 px-3 sm:px-4 rounded transition duration-300">
+        Cancel
+      </a>
+    </div>
+  </form>
 </div>
 {% endblock %}

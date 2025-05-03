@@ -6,81 +6,233 @@
   <title>Personal Budget Tracker</title>
 
   {% load static %}
-
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="flex flex-col min-h-screen bg-[#1b1b1b]">
 
-  <!-- Main Content Wrapper -->
-  <div class="flex flex-1">
-    <!-- Sidebar -->
-    <nav class="navbar w-64 shadow-md flex flex-col">
-      <div class="p-6">
-        <a href="/" class="text-2xl font-bold text-[#d8fffb] hover:text-[#00dac6] hover:bg-">Budget Tracker</a>
+  <!-- Mobile Navbar -->
+  <header class="md:hidden bg-[#1b1b1b] px-4 py-4 flex items-center justify-between">
+    <a href="/" class="text-xl font-bold text-[#d8fffb]">Budget Tracker</a>
+    <button id="menu-toggle" class="text-[#d8fffb] text-2xl focus:outline-none">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
+  <!-- Mobile Sidebar -->
+  <div id="mobileSidebar" class="md:hidden fixed top-16 right-4 w-52 bg-[#1b1b1b] text-xs text-[#d8fffb] shadow-lg rounded-md p-4 hidden z-50">
+    <ul class="space-y-2">
+      {% if user.is_authenticated and request.resolver_match.url_name == 'dashboard' %}
+        <li><a href="{% url 'logout' %}" class="block hover:text-[#00dac6]"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a></li>
+        <li class="relative">
+          <button id="dropdownToggle" class="flex items-center justify-between w-full px-4 py-2 text-left text-[#d8fffb] hover:text-[#00dac6]">
+            <span><i class="fa-solid fa-wallet mr-3"></i> Budget Settings</span>
+            <i id="dropdownIcon" class="fas fa-chevron-down text-sm"></i>
+          </button>
+        
+          <!-- Dropdown Content -->
+          <div id="dropdownMenu" class="{% if request.resolver_match.url_name in 'budget_settings budget_summary' %}block{% else %}hidden{% endif %} mt-2 ml-4 space-y-1">
+            <a href="{% url 'budget_settings' %}" 
+            class="block text-sm ml-4 pb-2 rounded px-2 py-1
+            {% if request.resolver_match.url_name == 'budget_settings' %}
+              bg-[#28282a] border border-[#343434] text-[#00dac6]
+            {% else %}
+              text-[#d8fffb] hover:text-[#00dac6]
+            {% endif %}">
+            <i class="fa-solid fa-bars-progress mr-3"></i> Set Monthly Budget
+          </a>
+
+          <a href="{% url 'budget_summary' %}" 
+            class="block text-sm ml-4 pb-2 rounded px-2 py-1
+            {% if request.resolver_match.url_name == 'budget_summary' %}
+              bg-[#28282a] border border-[#343434] text-[#00dac6]
+            {% else %}
+              text-[#d8fffb] hover:text-[#00dac6]
+            {% endif %}">
+            <i class="fa-solid fa-eye mr-3"></i> View Budget Summary
+          </a>
+
+          </div>
+        </li>
+      {% elif not user.is_authenticated %}
+        <li><a href="{% url 'login' %}" class="block hover:text-[#00dac6]"><i class="fas fa-sign-in-alt mr-2"></i>Login</a></li>
+        <li><a href="{% url 'register' %}" class="block hover:text-[#00dac6]"><i class="fas fa-user-plus mr-2"></i>Register</a></li>
+      {% else %}
+        <li><a href="{% url 'dashboard' %}" class="block hover:text-[#00dac6]"><i class="fas fa-chart-bar mr-2"></i>Dashboard</a></li>
+        <li class="relative">
+          <button id="dropdownToggle" class="flex items-center justify-between w-full px-4 py-2 text-left text-[#d8fffb] hover:text-[#00dac6]">
+            <span><i class="fa-solid fa-wallet mr-3"></i> Budget Settings</span>
+            <i id="dropdownIcon" class="fas fa-chevron-down text-sm"></i>
+          </button>
+        
+          <!-- Dropdown Content -->
+          <div id="dropdownMenu" class="{% if request.resolver_match.url_name in 'budget_settings budget_summary' %}block{% else %}hidden{% endif %} mt-2 ml-4 space-y-1">
+            <a href="{% url 'budget_settings' %}" 
+            class="block text-xs ml-4 pb-2 rounded px-2 py-1
+            {% if request.resolver_match.url_name == 'budget_settings' %}
+              bg-[#28282a] border border-[#343434] text-[#00dac6]
+            {% else %}
+              text-[#d8fffb] hover:text-[#00dac6]
+            {% endif %}">
+            <i class="fa-solid fa-bars-progress mr-3"></i> Set Monthly Budget
+          </a>
+
+          <a href="{% url 'budget_summary' %}" 
+            class="block text-xs ml-4 pb-2 rounded px-2 py-1
+            {% if request.resolver_match.url_name == 'budget_summary' %}
+              bg-[#28282a] border border-[#343434] text-[#00dac6]
+            {% else %}
+              text-[#d8fffb] hover:text-[#00dac6]
+            {% endif %}">
+            <i class="fa-solid fa-eye mr-3"></i> View Budget Summary
+          </a>
+
+          </div>
+        </li>
+        <li><a href="{% url 'logout' %}" class="block hover:text-[#00dac6]"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a></li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="flex flex-1 flex-col md:flex-row">
+    <nav id="sidebar" class="hidden md:flex w-full md:w-64 shadow-md flex-col bg-[#1b1b1b] md:static z-50">
+      <div class="p-6 border-b border-gray-700 md:border-none">
+        <a href="/" class="text-2xl font-bold text-[#d8fffb] hover:text-[#00dac6]">Budget Tracker</a>
       </div>
-
       <ul class="flex-1 p-6 space-y-4">
-
         {% if user.is_authenticated %}
           <li class="text-center text-[#a4a4a4] font-semibold">Welcome, {{ request.user.username }}!</li>
 
-        <li>
-          <a href="{% url 'dashboard' %}" class="block px-4 py-2 rounded 
-          {% if request.resolver_match.url_name == 'dashboard' %}
-            bg-[#28282a] border border-[#343434] text-[#00dac6] font-semibold
-          {% else %}
-            text-[#d8fffb] font-semibold hover:text-[#00dac6]
-          {% endif %}">
-          <i class="fa-solid fa-table-columns mr-3"></i>
-          Dashboard</a>
-        </li>
-        
           <li>
-            <a href="{% url 'logout' %}" class="block px-4 py-2 text-[#d8fffb] font-semibold hover:text-[#00dac6]">
-              <i class="fa-solid fa-right-from-bracket mr-3"></i>
-              Logout</a>
+            <a href="{% url 'dashboard' %}" class="block px-4 py-2 rounded 
+            {% if request.resolver_match.url_name == 'dashboard' %}
+              bg-[#28282a] border border-[#343434] text-[#00dac6]
+            {% else %}
+              text-[#d8fffb] hover:text-[#00dac6]
+            {% endif %}">
+              <i class="fa-solid fa-table-columns mr-3"></i> Dashboard
+            </a>
+          </li>
+          
+          <li class="relative">
+            <button id="dropdownToggle" class="flex items-center justify-between w-full px-4 py-2 text-left text-[#d8fffb] hover:text-[#00dac6]">
+              <span><i class="fa-solid fa-wallet mr-3"></i> Budget Settings</span>
+              <i id="dropdownIcon" class="fas fa-chevron-down text-sm"></i>
+            </button>
+          
+            <!-- Dropdown Content -->
+            <div id="dropdownMenu" class="{% if request.resolver_match.url_name in 'budget_settings budget_summary' %}block{% else %}hidden{% endif %} mt-2 ml-4 space-y-1">
+              <a href="{% url 'budget_settings' %}" 
+              class="block text-sm ml-4 pb-2 rounded px-2 py-1
+              {% if request.resolver_match.url_name == 'budget_settings' %}
+                bg-[#28282a] border border-[#343434] text-[#00dac6]
+              {% else %}
+                text-[#d8fffb] hover:text-[#00dac6]
+              {% endif %}">
+              <i class="fa-solid fa-bars-progress mr-3"></i> Set Monthly Budget
+            </a>
+
+            <a href="{% url 'budget_summary' %}" 
+              class="block text-sm ml-4 pb-2 rounded px-2 py-1
+              {% if request.resolver_match.url_name == 'budget_summary' %}
+                bg-[#28282a] border border-[#343434] text-[#00dac6]
+              {% else %}
+                text-[#d8fffb] hover:text-[#00dac6]
+              {% endif %}">
+              <i class="fa-solid fa-eye mr-3"></i> View Budget Summary
+            </a>
+
+            </div>
+          </li>
+          
+          <li>
+            <a href="{% url 'logout' %}" class="block px-4 py-2 text-[#d8fffb] hover:text-[#00dac6]">
+              <i class="fa-solid fa-right-from-bracket mr-3"></i> Logout
+            </a>
           </li>
         {% else %}
           <li>
-            <a href="{% url 'login' %}" class="block px-4 py-2 rounded
-            {% if request.resolver_match.url_name == 'login'%}
-              bg-[#28282a] border border-[#343434] text-[#00dac6] font-semibold
+            <a href="{% url 'login' %}" class="block px-4 py-2 rounded 
+            {% if request.resolver_match.url_name == 'login' %}
+              bg-[#28282a] border border-[#343434] text-[#00dac6]
             {% else %}
-              text-[#d8fffb] font-semibold hover:text-[#00dac6]
+              text-[#d8fffb] hover:text-[#00dac6]
             {% endif %}">
-            <i class="fa-solid fa-right-to-bracket mr-3"></i>
-            Login</a>
+              <i class="fa-solid fa-right-to-bracket mr-3"></i> Login
+            </a>
           </li>
           <li>
-            <a href="{% url 'register' %}" class="block px-4 py-2 rounded
-            {% if request.resolver_match.url_name == 'register'%}
-              bg-[#28282a] border border-[#343434] text-[#00dac6] font-semibold
+            <a href="{% url 'register' %}" class="block px-4 py-2 rounded 
+            {% if request.resolver_match.url_name == 'register' %}
+              bg-[#28282a] border border-[#343434] text-[#00dac6]
             {% else %}
-              text-[#d8fffb] font-semibold hover:text-[#00dac6]
+              text-[#d8fffb] hover:text-[#00dac6]
             {% endif %}">
-            <i class="fa-solid fa-pen-to-square mr-3"></i>
-            Register</a>
+              <i class="fa-solid fa-pen-to-square mr-3"></i> Register
+            </a>
           </li>
         {% endif %}
       </ul>
     </nav>
 
     <!-- Page Content -->
-    <div class="flex-1 p-4 mt-10">
-      <div class="bg-[#0b0b0b] rounded-lg shadow-lg p-8 min-h-[calc(100vh-8rem)]">
-        {% block content %}
-        {% endblock %}
+    <div class="flex-1 p-4 mt-4 md:mt-10">
+      <div class="main-container relative rounded-lg shadow-lg p-6 md:p-8 min-h-[calc(100vh-8rem)] bg-cover bg-center bg-no-repeat"
+           style="background-image: url('{% static 'images/peso.png' %}');">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 to-transparent"></div>
+        <div class="absolute inset-0 backdrop-blur-sm bg-black/40"></div>
+        <div class="relative z-10">
+          {% block content %}{% endblock %}
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Footer -->
   <footer class="bg-[#1b1b1b] text-center py-4">
-    <p class="text-[#a4a4a4]">&copy; 2025 Budget Tracker</p>
+    <p class="text-[#a4a4a4]">&copy; 2025 Budget Tracker </p>
   </footer>
+
+  <!-- Mobile Sidebar-->
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileSidebar = document.getElementById('mobileSidebar');
+  
+    menuToggle.addEventListener('click', () => {
+      mobileSidebar.classList.toggle('hidden');
+    });
+  
+    document.addEventListener('click', (e) => {
+      if (!mobileSidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+        mobileSidebar.classList.add('hidden');
+      }
+    });
+  </script>
+
+<!-- Dropdown on the Menu -->
+<script>
+  const toggleBtn = document.getElementById('dropdownToggle');
+  const dropdown = document.getElementById('dropdownMenu');
+  const icon = document.getElementById('dropdownIcon');
+
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdown.classList.toggle('hidden');
+    icon.classList.toggle('fa-chevron-down');
+    icon.classList.toggle('fa-chevron-up');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target) && !toggleBtn.contains(e.target)) {
+      dropdown.classList.add('hidden');
+      icon.classList.add('fa-chevron-down');
+      icon.classList.remove('fa-chevron-up');
+    }
+  });
+</script>
 
 </body>
 </html>
