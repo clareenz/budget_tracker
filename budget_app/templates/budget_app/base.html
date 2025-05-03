@@ -6,82 +6,82 @@
   <title>Personal Budget Tracker</title>
 
   {% load static %}
-
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-</head>
 <body class="flex flex-col min-h-screen bg-[#1b1b1b]">
 
-  <!-- Main Content Wrapper -->
-  <div class="flex flex-1">
-    <!-- Sidebar -->
-    <nav class="navbar w-64 shadow-md flex flex-col">
-      <div class="p-6">
-        <a href="/" class="text-2xl font-bold text-[#d8fffb] hover:text-[#00dac6] hover:bg-">Budget Tracker</a>
+  <!-- Mobile Navbar -->
+  <header class="md:hidden bg-[#1b1b1b] px-4 py-4 flex items-center justify-between">
+    <a href="/" class="text-xl font-bold text-[#d8fffb]">Budget Tracker</a>
+    <button id="menu-toggle" class="text-[#d8fffb] text-2xl focus:outline-none">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
+  <!-- Sidebar -->
+  <div class="flex flex-1 flex-col md:flex-row">
+    <nav id="sidebar" class="hidden md:flex w-full md:w-64 shadow-md flex-col bg-[#1b1b1b] md:static z-50">
+      <div class="p-6 border-b border-gray-700 md:border-none">
+        <a href="/" class="text-2xl font-bold text-[#d8fffb] hover:text-[#00dac6]">Budget Tracker</a>
       </div>
-
       <ul class="flex-1 p-6 space-y-4">
-
         {% if user.is_authenticated %}
           <li class="text-center text-[#a4a4a4] font-semibold">Welcome, {{ request.user.username }}!</li>
 
-        <li>
-          <a href="{% url 'dashboard' %}" class="block px-4 py-2 rounded 
-          {% if request.resolver_match.url_name == 'dashboard' %}
-            bg-[#28282a] border border-[#343434] text-[#00dac6] font-semibold
-          {% else %}
-            text-[#d8fffb] font-semibold hover:text-[#00dac6]
-          {% endif %}">
-          <i class="fa-solid fa-table-columns mr-3"></i>
-          Dashboard</a>
-        </li>
-        
           <li>
-            <a href="{% url 'logout' %}" class="block px-4 py-2 text-[#d8fffb] font-semibold hover:text-[#00dac6]">
-              <i class="fa-solid fa-right-from-bracket mr-3"></i>
-              Logout</a>
+            <a href="{% url 'dashboard' %}" class="block px-4 py-2 rounded 
+            {% if request.resolver_match.url_name == 'dashboard' %}
+              bg-[#28282a] border border-[#343434] text-[#00dac6]
+            {% else %}
+              text-[#d8fffb] hover:text-[#00dac6]
+            {% endif %}">
+              <i class="fa-solid fa-table-columns mr-3"></i> Dashboard
+            </a>
+          </li>
+
+          <li>
+            <a href="{% url 'logout' %}" class="block px-4 py-2 text-[#d8fffb] hover:text-[#00dac6]">
+              <i class="fa-solid fa-right-from-bracket mr-3"></i> Logout
+            </a>
           </li>
         {% else %}
           <li>
-            <a href="{% url 'login' %}" class="block px-4 py-2 rounded
-            {% if request.resolver_match.url_name == 'login'%}
-              bg-[#28282a] border border-[#343434] text-[#00dac6] font-semibold
+            <a href="{% url 'login' %}" class="block px-4 py-2 rounded 
+            {% if request.resolver_match.url_name == 'login' %}
+              bg-[#28282a] border border-[#343434] text-[#00dac6]
             {% else %}
-              text-[#d8fffb] font-semibold hover:text-[#00dac6]
+              text-[#d8fffb] hover:text-[#00dac6]
             {% endif %}">
-            <i class="fa-solid fa-right-to-bracket mr-3"></i>
-            Login</a>
+              <i class="fa-solid fa-right-to-bracket mr-3"></i> Login
+            </a>
           </li>
           <li>
-            <a href="{% url 'register' %}" class="block px-4 py-2 rounded
-            {% if request.resolver_match.url_name == 'register'%}
-              bg-[#28282a] border border-[#343434] text-[#00dac6] font-semibold
+            <a href="{% url 'register' %}" class="block px-4 py-2 rounded 
+            {% if request.resolver_match.url_name == 'register' %}
+              bg-[#28282a] border border-[#343434] text-[#00dac6]
             {% else %}
-              text-[#d8fffb] font-semibold hover:text-[#00dac6]
+              text-[#d8fffb] hover:text-[#00dac6]
             {% endif %}">
-            <i class="fa-solid fa-pen-to-square mr-3"></i>
-            Register</a>
+              <i class="fa-solid fa-pen-to-square mr-3"></i> Register
+            </a>
           </li>
         {% endif %}
       </ul>
     </nav>
 
     <!-- Page Content -->
-    <div class="flex-1 p-4 mt-10">
-      <div class="main-container relative rounded-lg shadow-lg p-8 min-h-[calc(100vh-8rem)] bg-cover bg-center bg-no-repeat"
+    <div class="flex-1 p-4 mt-4 md:mt-10">
+      <div class="main-container relative rounded-lg shadow-lg p-6 md:p-8 min-h-[calc(100vh-8rem)] bg-cover bg-center bg-no-repeat"
            style="background-image: url('{% static 'images/peso.png' %}');">
-        <!-- Gradient Overlay -->
         <div class="absolute inset-0 bg-gradient-to-b from-black/60 to-transparent"></div>
-        <!-- Backdrop Blur -->
         <div class="absolute inset-0 backdrop-blur-sm bg-black/40"></div>
         <div class="relative z-10">
-          {% block content %}
-          {% endblock %}
+          {% block content %}{% endblock %}
         </div>
       </div>
-    </div>    
+    </div>
   </div>
 
   <!-- Footer -->
@@ -89,5 +89,17 @@
     <p class="text-[#a4a4a4]">&copy; 2025 Budget Tracker</p>
   </footer>
 
+  <!-- Mobile Menu Toggle Script -->
+  <script>
+    document.getElementById('menu-toggle').addEventListener('click', function () {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('hidden');
+      sidebar.classList.toggle('absolute');
+      sidebar.classList.toggle('top-16');
+      sidebar.classList.toggle('left-0');
+      sidebar.classList.toggle('w-full');
+      sidebar.classList.toggle('bg-[#1b1b1b]');
+    });
+  </script>
 </body>
 </html>

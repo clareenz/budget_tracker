@@ -1,27 +1,29 @@
 {% extends 'budget_app/base.html' %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto mt-10 bg-[#1b1b1b] shadow-md rounded-lg p-8 update-entry-container">
+<div class="max-w-2xl mx-auto mt-10 px-4 sm:px-0 bg-[#1b1b1b] shadow-md rounded-lg p-6 sm:p-8 update-entry-container">
   <h2 class="text-2xl font-bold mb-6 text-center text-white">Update Entry</h2>
 
   <form method="POST" class="space-y-6">
     {% csrf_token %}
-    
+
     {% for field in form %}
       <div>
         <label class="block text-[#a4a4a4] mb-2 font-semibold">{{ field.label_tag }}</label>
-        {{ field }}
+        <div class="w-full">{{ field }}</div>
         {% if field.errors %}
           <p class="text-red-500 text-sm mt-1">{{ field.errors }}</p>
         {% endif %}
       </div>
     {% endfor %}
-    
-    <div class="flex justify-center space-x-4 mt-6">
-      <button type="submit" class="bg-[#00dac6] hover:bg-[#00c7ab] hover:text-white text-black font-semibold py-2 px-6 rounded transition duration-300">
+
+    <div class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
+      <button type="submit"
+        class="w-full sm:w-auto bg-[#00dac6] hover:bg-[#00c7ab] hover:text-white text-black font-semibold py-2 px-6 rounded transition duration-300 text-center">
         Update
       </button>
-      <a href="{% url 'history' %}" class="bg-[#28282a] hover:bg-transparent text-[#00dac6] font-semibold py-2 px-6 rounded">
+      <a href="{% url 'history' %}"
+        class="w-full sm:w-auto bg-[#28282a] hover:bg-transparent text-[#00dac6] font-semibold py-2 px-6 rounded text-center transition duration-300">
         Cancel
       </a>
     </div>

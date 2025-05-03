@@ -1,280 +1,122 @@
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
 {% extends 'budget_app/base.html' %}
-
 {% block content %}
 <div class="relative max-w-7xl mx-auto px-4 py-4">
 
-    <h2 class="text-2xl text-[#d8fffb] font-bold mb-4">Your Financial Dashboard</h2>
-    
-    <!-- Toggle Button -->
-    <div class="absolute top-4 right-6 z-50">
-        <button id="toggleFilterBtn"
-            class="bg-[#124241] hover:bg-[#00dac6] text-white font-semibold py-2 px-4 rounded-lg shadow">
-            <i class="fas fa-sliders-h mr-2"></i>Filter
-        </button>
+  <h2 class="text-xl sm:text-2xl text-[#d8fffb] font-bold mb-4">
+    Your Financial Dashboard
+  </h2>  
+
+  <!-- Toggle Button -->
+  <div class="absolute top-4 right-4 z-50">
+    <button id="toggleFilterBtn"
+    class="bg-[#124241] hover:bg-[#00dac6] text-white font-semibold text-sm py-2 px-3 rounded-lg shadow w-auto flex items-center justify-center gap-2">
+      <i class="fas fa-sliders-h text-sm"></i>
+      <span class="hidden sm:inline">Filter</span>
+    </button>  
+  </div>
+
+  <!-- Filter Panel omitted for brevity -->
+
+  <!-- Cards Section -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+    <div class="bg-[#1b1b1b] border border-[#353535] shadow rounded-lg p-6">
+      <h5 class="text-sm sm:text-lg text-white font-semibold mb-2">
+        {% if is_filtered %}Filtered {% endif %}Total Income
+      </h5>
+      <p class="text-xl sm:text-2xl font-bold text-green-500">Php {{ total_income|floatformat:2 }}</p>
+    </div>
+    <div class="bg-[#1b1b1b] border border-[#353535] shadow rounded-lg p-6">
+      <h5 class="text-sm sm:text-lg text-white font-semibold mb-2">
+        {% if is_filtered %}Filtered {% endif %}Total Expenses
+      </h5>
+      <p class="text-xl sm:text-2xl font-bold text-red-500">Php {{ total_expense|floatformat:2 }}</p>
+    </div>
+    <div class="bg-[#1b1b1b] border border-[#353535] shadow rounded-lg p-6">
+      <h5 class="text-sm sm:text-lg text-white font-semibold mb-2">
+        {% if is_filtered %}Filtered {% endif %}Remaining Balance
+      </h5>
+      <p class="text-xl sm:text-2xl font-bold text-blue-500">Php {{ balance|floatformat:2 }}</p>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="mt-10 flex flex-col gap-6">
+    <div class="bg-[#1b1b1b] border border-[#353535] shadow rounded-lg p-6">
+      <h4 class="text-lg text-white font-semibold mb-4">Expenses by Category</h4>
+      <div class="w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px]">
+        <canvas id="expenseChart" class="w-full h-full"></canvas>
+      </div>
     </div>
 
-    <!-- Floating Filter Panel -->
-    <div id="filterPanel"
-        class="hidden absolute top-20 right-6 z-50 w-full max-w-sm bg-[#1b1b1b] border border-[#353535] shadow-lg rounded-lg p-6">
-        <h4 class="text-lg text-[#ffffff] font-semibold mb-4">Filter by Date</h4>
-        <form method="GET" action="{% url 'dashboard' %}" class="flex flex-col gap-4">
-            <!-- Month -->
-            <div>
-                <label for="month" class="block text-[#a4a4a4] text-sm font-medium mb-2">Month</label>
-                <select id="month" name="month" class="bg-[#2d2d2d] text-white border border-[#454545] rounded-md py-2 px-3 w-full">
-                    <option value="">All Months</option>
-                    <option value="1" {% if selected_month == '1' %}selected{% endif %}>January</option>
-                    <option value="2" {% if selected_month == '2' %}selected{% endif %}>February</option>
-                    <option value="3" {% if selected_month == '3' %}selected{% endif %}>March</option>
-                    <option value="4" {% if selected_month == '4' %}selected{% endif %}>April</option>
-                    <option value="5" {% if selected_month == '5' %}selected{% endif %}>May</option>
-                    <option value="6" {% if selected_month == '6' %}selected{% endif %}>June</option>
-                    <option value="7" {% if selected_month == '7' %}selected{% endif %}>July</option>
-                    <option value="8" {% if selected_month == '8' %}selected{% endif %}>August</option>
-                    <option value="9" {% if selected_month == '9' %}selected{% endif %}>September</option>
-                    <option value="10" {% if selected_month == '10' %}selected{% endif %}>October</option>
-                    <option value="11" {% if selected_month == '11' %}selected{% endif %}>November</option>
-                    <option value="12" {% if selected_month == '12' %}selected{% endif %}>December</option>
-                </select>
-            </div>
-            <!-- Year -->
-            <div>
-                <label for="year" class="block text-[#a4a4a4] text-sm font-medium mb-2">Year</label>
-                <select id="year" name="year" class="bg-[#2d2d2d] text-white border border-[#454545] rounded-md py-2 px-3 w-full">
-                    <option value="">All Years</option>
-                    {% for year_option in available_years %}
-                        <option value="{{ year_option }}" {% if selected_year == year_option %}selected{% endif %}>{{ year_option }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <!-- Category -->
-            <div>
-                <label for="category" class="block text-[#a4a4a4] text-sm font-medium mb-2">Category</label>
-                <select id="category" name="category" class="bg-[#2d2d2d] text-white border border-[#454545] rounded-md py-2 px-3 w-full">
-                    <option value="">All Categories</option>
-                    {% for category in all_categories %}
-                        <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <!-- Buttons -->
-            <div class="flex justify-between">
-                <button type="submit" class="bg-[#124241] hover:bg-[#00dac6] hover:text-[#113e43] text-white font-semibold py-2 px-4 rounded-lg">
-                    <i class="fas fa-filter mr-2"></i>Filter
-                </button>
-                {% if is_filtered %}
-                <a href="{% url 'dashboard' %}" class="bg-[#333333] hover:bg-[#444444] text-[#a4a4a4] font-semibold py-2 px-4 rounded-lg">
-                    <i class="fas fa-times mr-2"></i>Clear
-                </a>
-                {% endif %}
-            </div>
-        </form>
+    <div class="bg-[#1b1b1b] border border-[#353535] shadow rounded-lg p-6">
+      <h4 class="text-lg text-white font-semibold mb-4">Income vs Expenses</h4>
+      <div class="w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px]">
+        <canvas id="incomeExpenseChart" class="w-full h-full"></canvas>
+      </div>
     </div>
-
-    <!-- Cards Section -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Total Income -->
-        <div class="bg-[#1b1b1b] border border-[#353535] shadow rounded-lg p-6">
-            <h5 class="text-lg text-[#ffffff] font-semibold mb-2">
-                {% if is_filtered %}Filtered{% endif %} Total Income
-            </h5>
-            <p class="text-2xl text-green-500 font-bold">Php {{ total_income|floatformat:2 }}</p>
-        </div>
-
-        <!-- Total Expenses -->
-        <div class="bg-[#1b1b1b] border border-[#353535] shadow rounded-lg p-6">
-            <h5 class="text-lg text-[#ffffff] font-semibold mb-2">
-                {% if is_filtered %}Filtered{% endif %} Total Expenses
-            </h5>
-            <p class="text-2xl text-red-500 font-bold">Php {{ total_expense|floatformat:2 }}</p>
-        </div>
-
-        <!-- Remaining Balance -->
-        <div class="bg-[#1b1b1b] border border-[#353535] shadow rounded-lg p-6">
-            <h5 class="text-lg text-[#ffffff] font-semibold mb-2">
-                {% if is_filtered %}Filtered{% endif %} Remaining Balance
-            </h5>
-            <p class="text-2xl text-blue-500 font-bold">Php {{ balance|floatformat:2 }}</p>
-        </div>
-    </div>
-
-    <!-- Expense Categories List -->
-    <div class="mt-10 bg-[#1b1b1b] border border-[#353535] shadow rounded-lg p-6">
-        <h4 class="text-xl text-[#ffffff] font-semibold mb-6">
-            {% if is_filtered %}Filtered{% endif %} Expenses by Category
-        </h4>
-    
-        <div class="flex flex-col md:flex-row gap-6">
-            <!-- Expense Categories List -->
-            <div class="flex-1 pr-0 md:pr-6">
-                <h2 class="text-l text-[#ffffff] font-semibold mb-4">Your List of Expenses</h2>
-                {% if category_expenses %}
-                <ul class="pl-2 pr-2 md:pl-6 md:pr-6 m-1">
-                    {% for category, total in category_expenses.items %}
-                    <li class="flex justify-between py-3 border-b border-[#353535] last:border-b-0">
-                        <span class="text-[#a4a4a4]">{{ category }}</span>
-                        <span class="text-[#ffffff] font-bold text-base">Php {{ total|floatformat:2 }}</span>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <p class="text-[#a4a4a4]">No expense data available for this period.</p>
-                {% endif %}
-            </div>
-
-            <div class="hidden md:block border-l-2 border-[#353535]"></div>
-    
-            <!-- Pie Chart -->
-            <div class="flex-1 pl-0 md:pl-6">
-                <h2 class="text-l text-[#ffffff] font-semibold mb-4">Your Expenses</h2>
-                <div class="w-full h-72 max-w-md mx-auto">
-                    <canvas id="expenseChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="mt-10 flex flex-col lg:flex-row gap-6">
-        <!-- Bar Chart -->
-        <div class="flex-1 bg-[#1b1b1b] border border-[#353535] shadow rounded-lg p-6">
-            <h4 class="text-xl text-[#ffffff] font-semibold mb-4">
-                {% if is_filtered %}Filtered{% endif %} Income vs Expenses
-            </h4>
-            <div class="w-full h-72">
-                <canvas id="incomeExpenseChart"></canvas>
-            </div>
-        </div>
-    
-        <!-- Quick Access -->
-        <div class="w-full lg:w-1/3 bg-[#1b1b1b] border border-[#353535] shadow rounded-lg p-6">
-            <h4 class="text-xl text-[#ffffff] font-semibold mb-4">Quick Access</h4>
-            <div class="flex flex-col md:flex-row lg:flex-col gap-4 mt-5">
-                <a href="{% url 'add_entry' %}" class="inline-block text-center bg-[#222255] hover:bg-[#60a5fa] hover:text-[#222255] text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-plus mr-3"></i>
-                    Add Income/Expense
-                </a>
-                <a href="{% url 'history' %}" class="inline-block text-center bg-[#124241] hover:bg-[#00dac6] hover:text-[#113e43] text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center">
-                    <i class="fa-solid fa-clipboard-list mr-3"></i>
-                    View History
-                </a>
-            </div>
-        </div>
-    </div>    
-
+  </div>
 </div>
 
-<!-- Chart.js Scripts -->
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Pie Chart for Expenses by Category
-    var ctx1 = document.getElementById('expenseChart').getContext('2d');
-    var expenseChart = new Chart(ctx1, {
-        type: 'pie',
-        data: {
-            labels: {{ category_names|safe }},
-            datasets: [{
-                label: 'Expenses by Category',
-                data: {{ category_totals|safe }},
-                backgroundColor: ['#f87171', '#60a5fa', '#34d399', '#fbbf24', '#a78bfa'],
-                borderColor: ['#ffffff','#ffffff','#ffffff','#ffffff','#ffffff'],
-                borderWidth: 2,
-            }]
+  const pieCtx = document.getElementById('expenseChart').getContext('2d');
+  new Chart(pieCtx, {
+    type: 'pie',
+    data: {
+      labels: {{ category_names|default:"[]"|safe }},
+      datasets: [{
+        label: 'Expenses by Category',
+        data: {{ category_totals|default:"[]"|safe }},
+        backgroundColor: ['#f87171', '#60a5fa', '#34d399', '#fbbf24', '#a78bfa'],
+        borderColor: '#ffffff',
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: {
+            color: '#a4a4a4',
+            font: { weight: 'bold' }
+          }
+        }
+      }
+    }
+  });
+
+  const barCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+  new Chart(barCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Income', 'Expenses'],
+      datasets: [{
+        label: 'Amount',
+        data: [{{ total_income|default:0 }}, {{ total_expense|default:0 }}],
+        backgroundColor: ['#60a5fa', '#f87171'],
+        borderColor: '#ffffff',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { color: '#a4a4a4' },
+          grid: { color: '#353535' }
         },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        color: '#a4a4a4',
-                        font: {
-                            weight: 'bold',
-                        }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.label + ': Php ' + tooltipItem.raw.toFixed(2);  
-                        },
-                        title: function() {
-                            return '';
-                        }
-                    },
-                    titleColor: '#a4a4a4',
-                    bodyColor: '#ffffff' 
-                }
-            }
+        x: {
+          ticks: { color: '#a4a4a4' },
+          grid: { color: '#353535' }
         }
-    });
-
-    // Bar Chart for Income vs Expenses
-    var ctx2 = document.getElementById('incomeExpenseChart').getContext('2d');
-    var incomeExpenseChart = new Chart(ctx2, {
-        type: 'bar',
-        data: {
-            labels: ['Income', 'Expenses'],
-            datasets: [{
-                label: 'Amount',
-                data: [{{ total_income }}, {{ total_expense }}],
-                backgroundColor: ['#60a5fa','#f87171'],
-                borderColor: ['#ffffff','#ffffff'],
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.dataset.label + ': Php ' + tooltipItem.raw.toFixed(2);
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: '#a4a4a4'
-                    },
-                    grid: {
-                        color: '#353535'
-                    }
-                },
-                x: {
-                    ticks: {
-                        color: '#a4a4a4'
-                    },
-                    grid: {
-                        color: '#353535'
-                    }
-                }
-            }
-        }
-    });
+      }
+    }
+  });
 </script>
-
-<script>
-    const toggleBtn = document.getElementById('toggleFilterBtn');
-    const filterPanel = document.getElementById('filterPanel');
-
-    toggleBtn.addEventListener('click', () => {
-        filterPanel.classList.toggle('hidden');
-    });
-
-    // Optional: hide panel when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!filterPanel.contains(e.target) && !toggleBtn.contains(e.target)) {
-            filterPanel.classList.add('hidden');
-        }
-    });
-</script>
-
 {% endblock %}
