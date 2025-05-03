@@ -20,6 +20,18 @@
       </div>
   </div>
 
+    <!-- Budget Warning -->
+    {% if over_budget %}
+    <div class="bg-red-100 text-red-800 border border-red-300 p-3 mb-4 rounded text-xs sm:text-sm">
+      <p class="font-semibold mb-2">⚠️ Budget Exceeded:</p>
+      <ul class="list-disc list-inside">
+        {% for category, data in over_budget.items %}
+        <li>{{ category }}: Spent Php {{ data.total|floatformat:2 }} / Budget Php {{ data.budget|floatformat:2 }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
     <!-- Floating Filter Panel -->
     <div id="filterPanel" class="hidden absolute top-16 right-2 z-50 w-full max-w-xs sm:max-w-sm bg-[#1b1b1b] border border-[#353535] shadow-lg rounded-md p-3 text-xs">
         <h4 class="text-sm text-[#ffffff] font-semibold mb-3">Filter by Date</h4>
@@ -151,7 +163,7 @@
       <!-- Pie Chart -->
       <div class="flex-1 pl-0 md:pl-3">
         <h2 class="text-xs sm:text-sm md:text-sm text-[#ffffff] font-semibold mb-2">Your Expenses</h2>
-        <div class="w-full h-52 max-w-sm mx-auto">
+        <div class="w-full h-52 max-w-sm mx-auto flex justify-center items-center">
           <canvas id="expenseChart"></canvas>
         </div>
       </div>
@@ -159,14 +171,14 @@
   </div>
   
 
-  <!-- Bar Chart + Quick Access -->
+  <!-- Bar Chart -->
   <div class="mt-4 flex flex-col lg:flex-row gap-4">
     <!-- Bar Chart Card -->
     <div class="flex-1 bg-[#1b1b1b] border border-[#353535] shadow rounded-md p-4">
       <h4 class="text-xs sm:text-sm md:text-base text-[#ffffff] font-semibold mb-2">
         {% if is_filtered %}Filtered{% endif %} Income vs Expenses
       </h4>
-      <div class="w-full h-52">
+      <div class="w-full h-52 flex justify-center items-center">
         <canvas id="incomeExpenseChart"></canvas>
       </div>
     </div>

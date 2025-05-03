@@ -34,3 +34,22 @@ class Entry(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.amount} ({self.type})"
+
+class Budget(models.Model):
+
+    CATEGORY_CHOICES = [
+    ('food', 'Food'),
+    ('rent', 'Rent'),
+    ('transportation', 'Transportation'),
+    ('entertainment', 'Entertainment'),
+    # add more as needed
+]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    month = models.IntegerField(choices=[(i, i) for i in range(1, 13)])
+    year = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.category} - {self.month}/{self.year} - Php {self.amount}"

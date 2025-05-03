@@ -316,6 +316,28 @@
   background-color: #3c3c3c;
 }
 
+/* Budget Settings Styling */
+/* Budget Settings Styling */
+.budget-settings-container input[type="text"],
+.budget-settings-container input[type="number"],
+.budget-settings-container select {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #343434;
+  background-color: #3c3c3c;
+  color: #b1b1b1;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.budget-settings-container input:focus,
+.budget-settings-container select:focus {
+  border-color: #00dac6;
+  outline: none;
+  background-color: #3c3c3c;
+}
+
 /* Scrollbar for WebKit-based browsers (Chrome, Edge, Safari) */
 .scrollbar-custom::-webkit-scrollbar {
   width: 6px;
