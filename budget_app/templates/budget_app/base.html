@@ -20,6 +20,21 @@
     </button>
   </header>
 
+  <!-- Mobile Sidebar (Dashboard only logout) -->
+  <div id="mobileSidebar" class="md:hidden fixed top-16 right-4 w-52 bg-[#1b1b1b] text-xs text-[#d8fffb] shadow-lg rounded-md p-4 hidden z-50">
+    <ul class="space-y-2">
+      {% if user.is_authenticated and request.resolver_match.url_name == 'dashboard' %}
+        <li><a href="{% url 'logout' %}" class="block hover:text-[#00dac6]"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a></li>
+      {% elif not user.is_authenticated %}
+        <li><a href="{% url 'login' %}" class="block hover:text-[#00dac6]"><i class="fas fa-sign-in-alt mr-2"></i>Login</a></li>
+        <li><a href="{% url 'register' %}" class="block hover:text-[#00dac6]"><i class="fas fa-user-plus mr-2"></i>Register</a></li>
+      {% else %}
+        <li><a href="{% url 'dashboard' %}" class="block hover:text-[#00dac6]"><i class="fas fa-chart-bar mr-2"></i>Dashboard</a></li>
+        <li><a href="{% url 'logout' %}" class="block hover:text-[#00dac6]"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a></li>
+      {% endif %}
+    </ul>
+  </div>
+
   <!-- Sidebar -->
   <div class="flex flex-1 flex-col md:flex-row">
     <nav id="sidebar" class="hidden md:flex w-full md:w-64 shadow-md flex-col bg-[#1b1b1b] md:static z-50">
@@ -86,20 +101,24 @@
 
   <!-- Footer -->
   <footer class="bg-[#1b1b1b] text-center py-4">
-    <p class="text-[#a4a4a4]">&copy; 2025 Budget Tracker</p>
+    <p class="text-[#a4a4a4]">&copy; 2025 Budget Tracker </p>
   </footer>
 
-  <!-- Mobile Menu Toggle Script -->
+  <!-- Mobile Sidebar-->
   <script>
-    document.getElementById('menu-toggle').addEventListener('click', function () {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('hidden');
-      sidebar.classList.toggle('absolute');
-      sidebar.classList.toggle('top-16');
-      sidebar.classList.toggle('left-0');
-      sidebar.classList.toggle('w-full');
-      sidebar.classList.toggle('bg-[#1b1b1b]');
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileSidebar = document.getElementById('mobileSidebar');
+  
+    menuToggle.addEventListener('click', () => {
+      mobileSidebar.classList.toggle('hidden');
+    });
+  
+    document.addEventListener('click', (e) => {
+      if (!mobileSidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+        mobileSidebar.classList.add('hidden');
+      }
     });
   </script>
+  
 </body>
 </html>

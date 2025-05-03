@@ -1,56 +1,56 @@
 {% extends 'budget_app/base.html' %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto mt-10 bg-[#1b1b1b] shadow-md rounded-lg p-6 sm:p-8 add-entry-container">
-  <h2 class="text-2xl font-bold mb-6 text-center text-white">Add Income/Expense</h2>
+<div class="max-w-sm sm:max-w-lg md:max-w-2xl mx-auto mt-6 sm:mt-10 bg-[#1b1b1b] shadow-md rounded-md p-4 sm:p-6 md:p-8 text-xs sm:text-sm md:text-base">
+  <h2 class="text-lg sm:text-lg md:text-xl font-bold mb-4 sm:mb-6 text-center text-white">Add Income/Expense</h2>
 
-  <form method="POST" class="space-y-6">
+  <form method="POST" class="space-y-4 sm:space-y-5 md:space-y-6">
     {% csrf_token %}
 
     <!-- Type -->
-    <div>
-      <label for="{{ form.type.id_for_label }}" class="block text-[#a4a4a4] mb-2 font-semibold">Type:</label>
-      <div class="w-full">{{ form.type }}</div>
+    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+      <label for="{{ form.type.id_for_label }}" class="sm:w-1/4 text-base text-[#a4a4a4] font-semibold">Type:</label>
+      <div class="sm:w-3/4">{{ form.type }}</div>
     </div>
 
     <!-- Title -->
-    <div>
-      <label for="{{ form.title.id_for_label }}" class="block text-[#a4a4a4] mb-2 font-semibold">Title:</label>
-      <div class="w-full">{{ form.title }}</div>
+    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+      <label for="{{ form.title.id_for_label }}" class="sm:w-1/4 text-base text-[#a4a4a4] font-semibold">Title:</label>
+      <div class="sm:w-3/4">{{ form.title }}</div>
     </div>
 
     <!-- Amount -->
-    <div>
-      <label for="{{ form.amount.id_for_label }}" class="block text-[#a4a4a4] mb-2 font-semibold">Amount:</label>
-      <div class="w-full">{{ form.amount }}</div>
+    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+      <label for="{{ form.amount.id_for_label }}" class="sm:w-1/4 text-base text-[#a4a4a4] font-semibold">Amount:</label>
+      <div class="sm:w-3/4">{{ form.amount }}</div>
     </div>
 
     <!-- Category -->
-    <div>
-      <label for="{{ form.category.id_for_label }}" class="block text-[#a4a4a4] mb-2 font-semibold">Category:</label>
-      <div class="w-full">{{ form.category }}</div>
+    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+      <label for="{{ form.category.id_for_label }}" class="sm:w-1/4 text-base text-[#a4a4a4] font-semibold">Category:</label>
+      <div class="sm:w-3/4">{{ form.category }}</div>
     </div>
 
     <!-- Date -->
-    <div>
-      <label for="{{ form.date.id_for_label }}" class="block text-[#a4a4a4] mb-2 font-semibold">Date:</label>
-      <div class="w-full">{{ form.date }}</div>
+    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+      <label for="{{ form.date.id_for_label }}" class="sm:w-1/4 text-base text-[#a4a4a4] font-semibold">Date:</label>
+      <div class="sm:w-3/4">{{ form.date }}</div>
     </div>
 
     <!-- Notes -->
     <div>
-      <label for="{{ form.notes.id_for_label }}" class="block text-[#a4a4a4] mb-2 font-semibold">Notes:</label>
+      <label for="{{ form.notes.id_for_label }}" class="block text-base text-[#a4a4a4] mb-1 sm:mb-2 font-semibold">Notes:</label>
       <div class="w-full">{{ form.notes }}</div>
     </div>
 
     <!-- Buttons -->
-    <div class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
+    <div class="flex flex-row justify-center gap-2 sm:gap-3 mt-3 sm:mt-5 text-[10px] sm:text-xs">
       <button type="submit"
-        class="w-full sm:w-auto text-center bg-[#00dac6] hover:bg-[#00c7ab] hover:text-white text-black font-semibold py-2 px-6 rounded transition duration-300">
-        Save Entry
+        class="w-1/2 sm:w-auto text-center text-sm sm:text-xs md:text-base bg-[#00dac6] hover:bg-[#00c7ab] hover:text-white text-black font-semibold py-1 px-3 sm:px-4 rounded transition duration-300">
+        Save
       </button>
       <a href="{% url 'dashboard' %}"
-        class="w-full sm:w-auto text-center bg-[#28282a] hover:bg-transparent text-[#00dac6] font-semibold py-2 px-6 rounded transition duration-300">
+        class="w-1/2 sm:w-auto text-center text-sm sm:text-xs md:text-base bg-[#28282a] hover:bg-transparent text-[#00dac6] font-semibold py-1 px-3 sm:px-4 rounded transition duration-300">
         Cancel
       </a>
     </div>

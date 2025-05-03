@@ -1,42 +1,39 @@
 {% extends 'budget_app/base.html' %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto px-4 py-6 mt-10">
-  <h2 class="text-3xl font-bold mb-6 text-center text-[#d8fffb]">History</h2>
+<div class="max-w-6xl mx-auto px-2 sm:px-4 py-4 sm:py-6 mt-6 sm:mt-10 text-xs sm:text-sm">
+  <h2 class="text-base sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 text-center text-[#d8fffb]">History</h2>
 
-  <!-- Export Button -->
-  <div class="flex justify-end mb-4">
-    <a href="{% url 'export_csv' %}"
-      class="w-full sm:w-auto text-center bg-[#00dac6] hover:bg-[#00c7ab] hover:text-white text-black font-semibold py-2 px-4 rounded transition">
-      Export to CSV
-    </a>
+  <!-- Export button (visible only on larger screens) -->
+  <div class="hidden sm:flex justify-end mb-4">
+    <a href="{% url 'export_csv' %}" class="text-center bg-[#00dac6] hover:bg-[#00c7ab] hover:text-white text-black font-semibold py-1 px-3 rounded text-sm transition">Export to CSV</a>
   </div>
 
   <!-- Table -->
-  <div class="overflow-x-auto rounded-lg shadow">
+  <div class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-md shadow scrollbar-custom">
     <table class="min-w-full bg-[#28282a]">
-      <thead class="bg-[#1b1b1b] text-[#9d9d9d] uppercase text-sm">
+      <thead class="bg-[#1b1b1b] text-[#9d9d9d] uppercase text-xs">
         <tr>
-          <th class="py-3 px-4 sm:px-6 text-left">Title</th>
-          <th class="py-3 px-4 sm:px-6 text-left">Amount</th>
-          <th class="py-3 px-4 sm:px-6 text-left">Date</th>
-          <th class="py-3 px-4 sm:px-6 text-left">Type</th>
-          <th class="py-3 px-4 sm:px-6 text-left">Category</th>
-          <th class="py-3 px-4 sm:px-6 text-left">Notes</th>
-          <th class="py-3 px-4 sm:px-6 text-center">Actions</th>
+          <th class="py-1 px-2 sm:py-3 sm:px-4 text-left">Title</th>
+          <th class="py-1 px-2 sm:py-3 sm:px-4 text-left">Amount</th>
+          <th class="py-1 px-2 sm:py-3 sm:px-4 text-left">Date</th>
+          <th class="py-1 px-2 sm:py-3 sm:px-4 text-left">Type</th>
+          <th class="py-1 px-2 sm:py-3 sm:px-4 text-left">Category</th>
+          <th class="py-1 px-2 sm:py-3 sm:px-4 text-left">Notes</th>
+          <th class="py-1 px-2 sm:py-3 sm:px-4 text-center">Actions</th>
         </tr>
       </thead>
-      <tbody class="text-white text-sm sm:text-base">
+      <tbody class="text-white text-[10px] sm:text-sm">
         {% for entry in entries %}
         <tr class="border-b border-[#383838] hover:bg-[#666666]">
-          <td class="py-4 px-4 sm:px-6">{{ entry.title }}</td>
-          <td class="py-4 px-4 sm:px-6">Php {{ entry.amount|floatformat:2 }}</td>
-          <td class="py-4 px-4 sm:px-6">{{ entry.date }}</td>
-          <td class="py-4 px-4 sm:px-6">{{ entry.get_type_display }}</td>
-          <td class="py-4 px-4 sm:px-6">{{ entry.get_category_display }}</td>
-          <td class="py-4 px-4 sm:px-6">{{ entry.notes }}</td>
-          <td class="py-4 px-4 sm:px-6">
-            <div class="flex justify-center gap-4 flex-wrap">
+          <td class="py-1 px-2 sm:py-4 sm:px-4">{{ entry.title }}</td>
+          <td class="py-1 px-2 sm:py-4 sm:px-4">Php {{ entry.amount|floatformat:2 }}</td>
+          <td class="py-1 px-2 sm:py-4 sm:px-4">{{ entry.date }}</td>
+          <td class="py-1 px-2 sm:py-4 sm:px-4">{{ entry.get_type_display }}</td>
+          <td class="py-1 px-2 sm:py-4 sm:px-4">{{ entry.get_category_display }}</td>
+          <td class="py-1 px-2 sm:py-4 sm:px-4">{{ entry.notes }}</td>
+          <td class="py-1 px-2 sm:py-4 sm:px-4">
+            <div class="flex justify-center gap-2 flex-wrap">
               <a href="{% url 'update_entry' entry.id %}" class="text-[#590be2] hover:text-[#c09bf9]" title="Edit">
                 <i class="fas fa-pen"></i>
               </a>
@@ -49,6 +46,11 @@
         {% endfor %}
       </tbody>
     </table>
+  </div>
+
+  <!-- Bottom Export button (always visible on mobile) -->
+  <div class="flex sm:hidden justify-end mt-4">
+    <a href="{% url 'export_csv' %}" class="text-center bg-[#00dac6] hover:bg-[#00c7ab] hover:text-white text-black font-semibold py-1 px-3 rounded text-xs transition">Export to CSV</a>
   </div>
 </div>
 {% endblock %}
